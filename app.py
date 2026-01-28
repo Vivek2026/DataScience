@@ -10,9 +10,7 @@ warnings.filterwarnings("ignore")
 
 MODEL_PATH = "iris_model.pkl"
 
-# -------------------------------------------------
-# 1. Train or load the model
-# -------------------------------------------------
+
 @st.cache_resource
 def get_model():
     if os.path.exists(MODEL_PATH):
@@ -33,9 +31,6 @@ iris = load_iris()
 feature_names = [s.replace(" (cm)", "") for s in iris.feature_names]
 target_names = iris.target_names
 
-# -------------------------------------------------
-# 2. Sidebar – user inputs
-# -------------------------------------------------
 st.sidebar.title("🔧 Iris Flower Parameters")
 
 def user_input():
@@ -49,9 +44,6 @@ def user_input():
 
 X_in = user_input()
 
-# -------------------------------------------------
-# 3. Predict
-# -------------------------------------------------
 proba = model.predict_proba(X_in)[0]
 pred_class = int(model.predict(X_in)[0])
 
@@ -63,18 +55,12 @@ col1, col2 = st.columns(2)
 col1.metric("Predicted species", target_names[pred_class])
 col2.metric("Confidence", f"{proba[pred_class]:.1%}")
 
-# -------------------------------------------------
-# 4. Probability bar chart
-# -------------------------------------------------
 fig, ax = plt.subplots(figsize=(4, 2))
 sns.barplot(x=proba, y=target_names, ax=ax, palette="viridis")
 ax.set_xlim(0, 1)
 ax.set_xlabel("Probability")
 st.pyplot(fig)
 
-# -------------------------------------------------
-# 5. SHAP explanation
-# -------------------------------------------------
 explainer = shap.TreeExplainer(model)
 shap_values = explainer.shap_values(X_in)
 
@@ -94,4 +80,5 @@ st.pyplot(plt.gcf())
 with st.expander("📊 Training data preview"):
     df_preview = pd.DataFrame(iris.data, columns=feature_names)
     df_preview["species"] = iris.target_names[iris.target]
+
     st.dataframe(df_preview.head())
