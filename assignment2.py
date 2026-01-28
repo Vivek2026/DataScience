@@ -38,7 +38,6 @@ class LinkedList:
         if n <= 0:
             raise ValueError("Index must be 1 or greater.")
 
-        # Deleting the head
         if n == 1:
             deleted_data = self.head.data
             self.head = self.head.next
@@ -48,7 +47,7 @@ class LinkedList:
         current = self.head
         count = 1
 
-        # Traverse to the (n-1)th node
+      
         while current and count < n - 1:
             current = current.next
             count += 1
@@ -89,3 +88,4 @@ if __name__ == "__main__":
             ll.delete_nth_node(1)
     except Exception as e:
         print("Error:", e)
+
